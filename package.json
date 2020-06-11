@@ -1,0 +1,39 @@
+{
+  "name": "@nohost/router",
+  "version": "0.5.0",
+  "description": "Nohost cluster router",
+  "bin": {
+    "nohost": "./bin/nohost.js",
+    "nohosts": "./bin/nohost.js",
+    "n2": "./bin/nohost.js"
+  },
+  "scripts": {
+    "lint": "eslint *.js lib src bin",
+    "lintfix": "eslint --fix *.js lib src bin",
+    "test": ""
+  },
+  "registry": "https://registry.npmjs.org/@nohost/router",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nohosts/router.git"
+  },
+  "keywords": [
+    "whistle",
+    "nohost",
+    "cluster"
+  ],
+  "author": "avwu <avwu@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nohosts/router/issues"
+  },
+  "homepage": "https://github.com/nohosts/router#readme",
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.4.0",
+    "eslint-config-imweb": "^0.2.19"
+  },
+  "dependencies": {
+    "crc32": "^0.2.2"
+  }
+}
