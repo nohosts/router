@@ -35,6 +35,7 @@
     "eslint-config-imweb": "^0.2.19"
   },
   "dependencies": {
-    "crc32": "^0.2.2"
+    "crc32": "^0.2.2",
+    "hparser": "^0.3.0"
   }
 }
