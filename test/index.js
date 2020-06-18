@@ -1,3 +1,35 @@
-const crc32 = require('crc32');
+const Router = require('../lib');
 
-console.log(parseInt(crc32('cr32'), 16) % 120, parseInt(crc32('crss32'), 16) % 120, parseInt(crc32('cr3as2'), 16) % 120);
+const servers = [
+  {
+    host: 'nohost.oa.com',
+    port: 8080,
+  },
+  {
+    host: 'imwebtest.oa.com',
+    port: 8080,
+  },
+];
+
+const router = new Router(servers);
+
+router.proxy();
+
+setInterval(() => router.proxy(), 5000);
+
+setTimeout(() => {
+  router.update( [
+    {
+      host: 'nohost.oa.com',
+      port: 8080,
+    },
+  ]);
+  setTimeout(() => {
+    router.update( [
+      {
+        host: 'imwebtest.oa.com',
+        port: 8080,
+      },
+    ]);
+  }, 10000);
+}, 10000);
