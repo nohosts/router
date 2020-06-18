@@ -7,9 +7,10 @@
     "nohosts": "./bin/nohost.js",
     "n2": "./bin/nohost.js"
   },
+  "main": "lib/",
   "scripts": {
-    "lint": "eslint *.js lib src bin",
-    "lintfix": "eslint --fix *.js lib src bin",
+    "lint": "eslint lib",
+    "lintfix": "eslint --fix lib",
     "test": ""
   },
   "registry": "https://registry.npmjs.org/@nohost/router",
