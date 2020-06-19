@@ -1,7 +1,7 @@
 const http = require('http');
 const Router = require('../lib');
 
-const { SPACE_HEAD, GROUP_HEAD, NAME_HEAD } = Router;
+const { SPACE_NAME, GROUP_NAME, ENV_NAME } = Router;
 const servers = [
   {
     host: '127.0.0.1',
@@ -18,9 +18,9 @@ const router = new Router(servers);
 const addEnv = (req, res) => {
   res.on('error', () => {});
   const { headers } = req;
-  headers[SPACE_HEAD] = 'imweb';
-  headers[GROUP_HEAD] = 'avenwu';
-  // headers[NAME_HEAD] = encodeURIComponent('测试'); // 可选
+  headers[SPACE_NAME] = 'imweb';
+  headers[GROUP_NAME] = 'avenwu';
+  // headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
   req.isUIRequest = /127\.0\.0\.1/.test(headers.host);
 };
 
