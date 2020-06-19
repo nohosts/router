@@ -17,6 +17,7 @@ const router = new Router(servers);
 
 const addEnv = (req, res) => {
   res.on('error', () => {});
+  const { headers } = req;
   headers[SPACE_HEAD] = 'imweb';
   headers[GROUP_HEAD] = 'avenwu';
   // headers[NAME_HEAD] = encodeURIComponent('测试'); // 可选
@@ -24,7 +25,7 @@ const addEnv = (req, res) => {
 };
 
 const server = http.createServer(async (req, res) => {
-  await addEnv(req);
+  await addEnv(req, res);
   router.proxy(req, res);
 });
 
