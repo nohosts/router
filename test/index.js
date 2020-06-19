@@ -1,35 +1,41 @@
+const http = require('http');
 const Router = require('../lib');
 
+const { SPACE_HEAD, GROUP_HEAD, NAME_HEAD } = Router;
 const servers = [
   {
-    host: 'nohost.oa.com',
+    host: '127.0.0.1',
     port: 8080,
   },
   {
-    host: 'imwebtest.oa.com',
+    host: '127.0.0.1',
     port: 8080,
   },
 ];
 
 const router = new Router(servers);
 
-router.proxy();
+const addEnv = (req, res) => {
+  res.on('error', () => {});
+  headers[SPACE_HEAD] = 'imweb';
+  headers[GROUP_HEAD] = 'avenwu';
+  // headers[NAME_HEAD] = encodeURIComponent('测试'); // 可选
+  req.isUIRequest = /127\.0\.0\.1/.test(headers.host);
+};
 
-setInterval(() => router.proxy(), 5000);
+const server = http.createServer(async (req, res) => {
+  await addEnv(req);
+  router.proxy(req, res);
+});
 
-setTimeout(() => {
-  router.update( [
-    {
-      host: 'nohost.oa.com',
-      port: 8080,
-    },
-  ]);
-  setTimeout(() => {
-    router.update( [
-      {
-        host: 'imwebtest.oa.com',
-        port: 8080,
-      },
-    ]);
-  }, 10000);
-}, 10000);
+server.on('connect', async (req, socket) => {
+  await addEnv(req, socket);
+  router.proxy(req, socket);
+});
+
+server.on('upgrade', async (req, socket) => {
+  await addEnv(req, socket);
+  router.proxy(req, socket);
+});
+
+server.listen(5566);
