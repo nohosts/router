@@ -7,7 +7,9 @@ const {
   ENV_NAME,
   NOHOST_RULE,
   NOHOST_VALUE,
+  CLIENT_ID,
 } = Router;
+// router 会自动去重
 const servers = [
   {
     host: '127.0.0.1',
@@ -31,6 +33,9 @@ const addEnv = (req, res) => {
   headers[SPACE_NAME] = encodeURIComponent('imweb');
   headers[GROUP_NAME] = encodeURIComponent('avenwu');
   headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
+
+  // 设置 clientId (如果有)
+  // headers[CLIENT_ID] = uin;
 };
 
 const server = http.createServer(async (req, res) => {
@@ -41,15 +46,14 @@ const server = http.createServer(async (req, res) => {
   // res.writeHead(svrRes.statusCode, svrRes.headers);
   // svrRes.pipe(res);
 });
+
+const handleSocket = async (req, socket) => {
+  await addEnv(req, socket);
+  router.proxy(req, socket);
+}; 
 // TCP 请求
-server.on('connect', async (req, socket) => {
-  await addEnv(req, socket);
-  router.proxy(req, socket);
-});
+server.on('connect', handleSocket);
 // WebSocket 请求
-server.on('upgrade', async (req, socket) => {
-  await addEnv(req, socket);
-  router.proxy(req, socket);
-});
+server.on('upgrade', handleSocket);
 
 server.listen(5566);
