@@ -1,11 +1,12 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const app = require('koa')();
+const Koa = require('koa');
 const koaRouter = require('koa-router')();
 const Router = require('../lib');
 
 const PAGE_HTML = fs.readFileSync(path.join(__dirname, 'index.html'));
+const FAVICON = fs.readFileSync(path.join(__dirname, 'favicon.ico'));
 const {
   SPACE_NAME,
   GROUP_NAME,
@@ -25,12 +26,41 @@ const servers = [
 
 const router = new Router(servers);
 const server = http.createServer();
+const app = new Koa();
 
-koaRouter.get('/*/*.html', (ctx) => {
+koaRouter.get('/:space/:group.html', (ctx) => {
+  ctx.type = 'html';
   ctx.body = PAGE_HTML;
 });
-koaRouter.use('/:space/:group/:env/**', async (ctx) => {
-  console.log(ctx.params);
+koaRouter.get('/favicon.ico', (ctx) => {
+  ctx.type = 'ico';
+  ctx.body = FAVICON;
+});
+// /space/group/env:uin/path/to
+koaRouter.all(/^\/([^/]+)\/([^/]+)\/([^/]+)\/(.*)/, async (ctx) => {
+  const space = ctx.params[0];
+  const group = ctx.params[1];
+  let env = ctx.params[2];
+  const path = ctx.params[3];
+  let index = env.lastIndexOf(':');
+  if (index === -1) {
+    return;
+  }
+  const uin = env.substring(index + 1);
+  env = env.substring(0, index);
+  const { req, res } = ctx;
+  const { headers } = req;
+  index = ctx.url.indexOf('?');
+  req.url = `/${path}${index === -1 ? '' : ctx.url.substring(index)}`;
+  headers[SPACE_NAME] = encodeURIComponent(space);
+  headers[GROUP_NAME] = encodeURIComponent(group);
+  if (env) {
+    headers[ENV_NAME] = encodeURIComponent(env);
+  }
+  if (uin) {
+    headers[CLIENT_ID_FILTER] = encodeURIComponent(uin);
+  }
+  await router.proxyUI(req, res);
 });
 
 app.use(koaRouter.routes());

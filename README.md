@@ -1,4 +1,6 @@
 # router
+> 以下需要使用最新版的 nohost：https://github.com/nohosts/nohost
+
 nohost 集群部署时，用来分发请求到各个节点的路由器。
 
 # 安装
