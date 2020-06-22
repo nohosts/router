@@ -1,5 +1,5 @@
-1. 启动正常请求转发服务： `node proxy.js`
-2. 启动查看抓包转发服务：`node data.js`
+1. 启动正常请求转发服务： [node proxy.js](./proxy.js)
+2. 启动查看抓包转发服务：[node data.js](./data.js)
     > 也可以将上述两个服务合成一个，通过域名做区分
 3. 在 [whistle](https://github.com/avwo/whistle) 上设置规则：
     ``` txt
