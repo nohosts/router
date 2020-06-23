@@ -1,12 +1,7 @@
 {
   "name": "@nohost/router",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Nohost cluster router",
-  "bin": {
-    "nohost": "./bin/nohost.js",
-    "nohosts": "./bin/nohost.js",
-    "n2": "./bin/nohost.js"
-  },
   "main": "lib/",
   "scripts": {
     "lint": "eslint lib",
