@@ -43,8 +43,10 @@ const server = http.createServer(async (req, res) => {
   router.proxy(req, res);
   // 如果需要修改响应内容，可以采用下面的方式
   // const svrRes = await router.proxy(req);
-  // res.writeHead(svrRes.statusCode, svrRes.headers);
-  // svrRes.pipe(res);
+  // if (svrRes) {
+  //   res.writeHead(svrRes.statusCode, svrRes.headers);
+  //   svrRes.pipe(res);
+  // }
 });
 
 const handleSocket = async (req, socket) => {
