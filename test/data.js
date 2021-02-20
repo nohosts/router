@@ -1,12 +1,8 @@
 const http = require('http');
-const path = require('path');
-const fs = require('fs');
 const Koa = require('koa');
 const koaRouter = require('koa-router')();
 const Router = require('../lib');
 
-const PAGE_HTML = fs.readFileSync(path.join(__dirname, 'index.html'));
-const FAVICON = fs.readFileSync(path.join(__dirname, 'favicon.ico'));
 const {
   SPACE_NAME,
   GROUP_NAME,
@@ -18,49 +14,36 @@ const servers = [
     host: '127.0.0.1',
     port: 8080,
   },
-  {
-    host: '127.0.0.1',
-    port: 8080,
-  },
 ];
+const ENV_MAP = {
+  '1': {
+    space: 'imweb',
+    group: 'avenwu',
+    env: '测试'
+  }
+};
 
 const router = new Router(servers);
 const server = http.createServer();
 const app = new Koa();
 
-koaRouter.get('/:space/:group.html', (ctx) => {
-  ctx.type = 'html';
-  ctx.body = PAGE_HTML;
-});
-koaRouter.get('/favicon.ico', (ctx) => {
-  ctx.type = 'ico';
-  ctx.body = FAVICON;
-});
-// /space/group/env:uin/path/to
-koaRouter.all(/^\/([^/]+)\/([^/]+)\/([^/]+)\/(.*)/, async (ctx) => {
-  const space = ctx.params[0];
-  const group = ctx.params[1];
-  let env = ctx.params[2];
-  const path = ctx.params[3];
-  let index = env.lastIndexOf(':');
-  if (index === -1) {
+koaRouter.all('/network/:id/(.*)', async (ctx) => {
+  const network = ENV_MAP[ctx.params.id];
+  if (!network) {
     return;
   }
-  const uin = env.substring(index + 1);
-  env = env.substring(0, index);
-  const { req, res } = ctx;
-  const { headers } = req;
-  index = ctx.url.indexOf('?');
-  req.url = `/${path}${index === -1 ? '' : ctx.url.substring(index)}`;
+  const { space, group, env  } = network;
+  const { req, req: { headers }, request: { query: { uid } } } = ctx;
+  req.url = req.url.replace(`/network/${ctx.params.id}`, '');
   headers[SPACE_NAME] = encodeURIComponent(space);
   headers[GROUP_NAME] = encodeURIComponent(group);
   if (env) {
     headers[ENV_NAME] = encodeURIComponent(env);
   }
-  if (uin) {
-    headers[CLIENT_ID_FILTER] = encodeURIComponent(uin);
+  if (uid) {
+    headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
   }
-  await router.proxyUI(req, res);
+  await router.proxyUI(req, ctx.res);
 });
 
 app.use(koaRouter.routes());

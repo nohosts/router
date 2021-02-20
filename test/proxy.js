@@ -33,9 +33,8 @@ const addEnv = (req, res) => {
   headers[SPACE_NAME] = encodeURIComponent('imweb');
   headers[GROUP_NAME] = encodeURIComponent('avenwu');
   headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
-
   // 设置 clientId (如果有)
-  // headers[CLIENT_ID] = uin;
+  // headers[CLIENT_ID] = uid;
 };
 
 const server = http.createServer(async (req, res) => {
