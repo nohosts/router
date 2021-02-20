@@ -32,7 +32,8 @@
     "koa-router": "^9.0.1"
   },
   "dependencies": {
-    "@nohost/connect": "^1.2.0",
+    "@nohost/connect": "^1.2.1",
+    "crc32": "^0.2.2",
     "hparser": "^0.3.0"
   }
 }
