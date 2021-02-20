@@ -43,7 +43,10 @@ koaRouter.all('/network/:id/(.*)', async (ctx) => {
   if (uid) {
     headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
   }
-  await router.proxyUI(req, ctx.res);
+  const svrRes = await router.proxyUI(req);
+  ctx.status = svrRes.statusCode;
+  ctx.set(svrRes.headers);
+  ctx.body = svrRes;
 });
 
 app.use(koaRouter.routes());
