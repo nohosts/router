@@ -20,6 +20,11 @@ const ENV_MAP = {
     space: 'imweb',
     group: 'avenwu',
     env: '测试'
+  },
+  '2': {
+    space: 'imweb',
+    group: 'avenwu2',
+    env: '测试2'
   }
 };
 
@@ -33,16 +38,15 @@ koaRouter.all('/network/:id/(.*)', async (ctx) => {
     return;
   }
   const { space, group, env  } = network;
-  const { req, req: { headers }, request: { query: { uid } } } = ctx;
+  const { req, req: { headers } } = ctx;
   req.url = req.url.replace(`/network/${ctx.params.id}`, '');
   headers[SPACE_NAME] = encodeURIComponent(space);
   headers[GROUP_NAME] = encodeURIComponent(group);
   if (env) {
     headers[ENV_NAME] = encodeURIComponent(env);
   }
-  if (uid) {
-    headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
-  }
+  // 过滤某个账号的抓包数据
+  // headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
   const svrRes = await router.proxyUI(req);
   ctx.status = svrRes.statusCode;
   ctx.set(svrRes.headers);

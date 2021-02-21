@@ -24,15 +24,20 @@ const servers = [
 const router = new Router(servers);
 
 const addEnv = (req, res) => {
-  res.on('error', () => {});
   const { headers } = req;
   // 设置规则
-  headers[NOHOST_RULE] = encodeURIComponent('ke.qq.com file://{test.html}');
+  headers[NOHOST_RULE] = encodeURIComponent('file://{test.html} km.oa2.com www.test2.com');
   headers[NOHOST_VALUE] = encodeURIComponent(JSON.stringify({ 'test.html': 'hell world.' }));
   // 设置环境
-  headers[SPACE_NAME] = encodeURIComponent('imweb');
-  headers[GROUP_NAME] = encodeURIComponent('avenwu');
-  headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
+  if (req.headers.host === 'km.oa2.com') {
+    headers[SPACE_NAME] = encodeURIComponent('imweb');
+    headers[GROUP_NAME] = encodeURIComponent('avenwu');
+    headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
+  } else if (req.headers.host !== 'km.oa.com') {
+    headers[SPACE_NAME] = encodeURIComponent('imweb');
+    headers[GROUP_NAME] = encodeURIComponent('avenwu2');
+    headers[ENV_NAME] = encodeURIComponent('测试2'); // 可选
+  }
   // 设置 clientId (如果有)
   // headers[CLIENT_ID] = uid;
 };
