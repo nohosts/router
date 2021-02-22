@@ -44,7 +44,7 @@ const addEnv = (req, res) => {
 
 const server = http.createServer(async (req, res) => {
   await addEnv(req, res);
-  router.proxy(req, res);
+  router.proxy(req, res, console.log);
   // 如果需要修改响应内容，可以采用下面的方式
   // const svrRes = await router.proxy(req);
   // if (svrRes) {
@@ -55,7 +55,7 @@ const server = http.createServer(async (req, res) => {
 
 const handleSocket = async (req, socket) => {
   await addEnv(req, socket);
-  router.proxy(req, socket);
+  router.proxy(req, socket, console.log);
 }; 
 // TCP 请求
 server.on('connect', handleSocket);

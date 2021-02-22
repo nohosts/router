@@ -47,7 +47,7 @@ koaRouter.all('/network/:id/(.*)', async (ctx) => {
   }
   // 过滤某个账号的抓包数据
   // headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
-  const svrRes = await router.proxyUI(req);
+  const svrRes = await router.proxyUI(req, console.log);
   ctx.status = svrRes.statusCode;
   ctx.set(svrRes.headers);
   ctx.body = svrRes;
