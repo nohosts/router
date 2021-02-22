@@ -9,6 +9,18 @@
     # ke.qq.com 域下的所有请求转到 proxy server
     ke.qq.com internal-proxy://127.0.0.1:5566
     ```
+4. 如果只是将请求透传到某个 Nohost server，可以采用下面到方式：
+``` js
+const Router = require('@nohost/router');
+
+const router = new Router({
+    host: '10.x.x.x',
+    port: 8080,
+});
+
+router.proxy(req, res); // 同测试用例，无需设置 space / group，env 按需设置
+router.proxyUI(req, res); // 同测试用例，无需设置 space / group，env 按需设置
+```
 
 ![whistle规则](https://user-images.githubusercontent.com/11450939/85247237-ae84b380-b47f-11ea-92c7-601fb120ed54.png)
 
