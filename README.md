@@ -91,5 +91,18 @@ headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
 router.proxyUI(req, res);
 ```
 
+### 只转发到指定 Nohost 服务
+``` js
+const Router = require('@nohost/router');
+
+const router = new Router({
+    host: '10.x.x.x',
+    port: 8080,
+});
+
+router.proxy(req, res); // 同测试用例，无需设置 space / group，env 按需设置
+router.proxyUI(req, res); // 同测试用例，无需设置 space / group，env 按需设置
+```
+
 具体实现参考：[测试用例](./test/README.md)
 
