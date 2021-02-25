@@ -1,6 +1,6 @@
 {
   "name": "@nohost/router",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Nohost cluster router",
   "main": "lib/",
   "scripts": {
@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@nohost/connect": "^1.2.1",
-    "crc32": "^0.2.2",
     "hparser": "^0.3.0"
   }
 }
