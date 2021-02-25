@@ -1,6 +1,6 @@
 {
   "name": "@nohost/router",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Nohost cluster router",
   "main": "lib/",
   "scripts": {
