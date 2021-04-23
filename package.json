@@ -1,6 +1,6 @@
 {
   "name": "@nohost/router",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Nohost cluster router",
   "main": "lib/",
   "scripts": {
@@ -32,7 +32,7 @@
     "koa-router": "^9.0.1"
   },
   "dependencies": {
-    "@nohost/connect": "^1.2.1",
+    "@nohost/connect": "1.2.2",
     "hparser": "^0.3.0"
   }
 }
