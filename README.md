@@ -22,7 +22,6 @@ const {
   CLIENT_ID,
   CLIENT_ID_FILTER,
   writeHead,
-  writeBody,
   writeError,
 } = Router;
 // 初始化传人部署的 nohost 服务器列表
@@ -41,7 +40,7 @@ const router = new Router([
 try {
   const svrRes = await router.proxy(req, res);
   writeHead(res, svrRes);
-  writeBody(res, svrRes);
+  svrRes.pipe(res);
 } catch (err) {
   writeError(res, err);
 }
