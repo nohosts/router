@@ -39,7 +39,7 @@ koaRouter.all('/network/:id/(.*)', async (ctx) => {
     return;
   }
   const { space, group, env  } = network;
-  const { req, req: { headers } } = ctx;
+  const { req, res, req: { headers } } = ctx;
   req.url = req.url.replace(`/network/${ctx.params.id}`, '');
   headers[SPACE_NAME] = encodeURIComponent(space);
   headers[GROUP_NAME] = encodeURIComponent(group);
@@ -48,8 +48,8 @@ koaRouter.all('/network/:id/(.*)', async (ctx) => {
   }
   // 过滤某个账号的抓包数据
   // headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
-  const svrRes = await router.proxyUI(req, console.log);
-  writeHead(ctx.res, svrRes);
+  const svrRes = await router.proxyUI(req, res, console.log);
+  writeHead(res, svrRes);
   // ctx.status = svrRes.statusCode;
   // ctx.set(svrRes.headers);
   ctx.body = svrRes;
