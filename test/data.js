@@ -8,7 +8,6 @@ const {
   GROUP_NAME,
   ENV_NAME,
   // CLIENT_ID_FILTER,
-  writeError,
   writeHead,
 } = Router;
 const servers = [
