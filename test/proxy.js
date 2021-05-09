@@ -7,7 +7,9 @@ const {
   ENV_NAME,
   NOHOST_RULE,
   NOHOST_VALUE,
-  CLIENT_ID,
+  writeHead,
+  writeError,
+  // CLIENT_ID,
 } = Router;
 // router 会自动去重
 const servers = [
@@ -25,7 +27,7 @@ const router = new Router(servers);
 
 const addEnv = (req, res) => {
   const { headers } = req;
-  // 设置规则
+  // 设置规则，如果没有规则，这两个设置为空
   headers[NOHOST_RULE] = encodeURIComponent('file://{test.html} km.oa2.com www.test2.com');
   headers[NOHOST_VALUE] = encodeURIComponent(JSON.stringify({ 'test.html': 'hell world.' }));
   // 设置环境
@@ -44,13 +46,13 @@ const addEnv = (req, res) => {
 
 const server = http.createServer(async (req, res) => {
   await addEnv(req, res);
-  router.proxy(req, res, console.log);
-  // 如果需要修改响应内容，可以采用下面的方式
-  // const svrRes = await router.proxy(req);
-  // if (svrRes) {
-  //   res.writeHead(svrRes.statusCode, svrRes.headers);
-  //   svrRes.pipe(res);
-  // }
+  try {
+    const svrRes = await router.proxy(req, res);
+    writeHead(res, svrRes);
+    svrRes.pipe(res);
+  } catch (err) {
+    writeError(res, err);
+  }
 });
 
 const handleSocket = async (req, socket) => {
