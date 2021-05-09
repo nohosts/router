@@ -21,6 +21,9 @@ const {
   NOHOST_VALUE,
   CLIENT_ID,
   CLIENT_ID_FILTER,
+  writeHead,
+  writeBody,
+  writeError,
 } = Router;
 // 初始化传人部署的 nohost 服务器列表
 const router = new Router([
@@ -35,7 +38,13 @@ const router = new Router([
 
 
 // 支持http、websocket、tunnel
-router.proxy(req, res);
+try {
+  const svrRes = await router.proxy(req, res);
+  writeHead(res, svrRes);
+  writeBody(res, svrRes);
+} catch (err) {
+  writeError(res, err);
+}
 
 // 查看抓包请求
 router.proxyUI(req, res);
