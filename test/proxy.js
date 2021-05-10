@@ -25,29 +25,37 @@ const servers = [
 
 const router = new Router(servers);
 
-const addEnv = (req, res) => {
+const getOptions = (req) => {
   const { headers } = req;
-  // 设置规则，如果没有规则，这两个设置为空
-  headers[NOHOST_RULE] = encodeURIComponent('file://{test.html} km.oa2.com www.test2.com');
-  headers[NOHOST_VALUE] = encodeURIComponent(JSON.stringify({ 'test.html': 'hell world.' }));
-  // 设置环境
-  if (req.headers.host === 'km.oa2.com') {
-    headers[SPACE_NAME] = encodeURIComponent('imweb');
-    headers[GROUP_NAME] = encodeURIComponent('avenwu');
-    headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
+  const spaceName = 'imweb';
+  let groupName;
+  let envName;
+  let clientId;
+  if (headers.host === 'km.oa2.com') {
+    groupName = 'avenwu';
+    envName = '测试'; // 可选
   } else if (req.headers.host !== 'km.oa.com') {
-    headers[SPACE_NAME] = encodeURIComponent('imweb');
-    headers[GROUP_NAME] = encodeURIComponent('avenwu2');
-    headers[ENV_NAME] = encodeURIComponent('测试2'); // 可选
+    groupName = 'avenwu2';
+    envName = '测试2'; // 可选
+    if (req.headers.host === 'ke.qq.com') {
+      clientId = 'test';
+    }
   }
-  // 设置 clientId (如果有)
-  // headers[CLIENT_ID] = uid;
+
+  return {
+    rules: 'file://{test.html} km.oa2.com www.test2.com',
+    values: { 'test.html': 'hell world.' },
+    spaceName,
+    groupName,
+    envName,
+    clientId,
+    // callback: console.log, // 可选
+  };
 };
 
 const server = http.createServer(async (req, res) => {
-  await addEnv(req, res);
   try {
-    const svrRes = await router.proxy(req, res);
+    const svrRes = await router.proxy(req, res, getOptions(req));
     writeHead(res, svrRes);
     svrRes.pipe(res);
   } catch (err) {
@@ -56,8 +64,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 const handleSocket = async (req, socket) => {
-  await addEnv(req, socket);
-  router.proxy(req, socket, console.log);
+  router.proxy(req, socket, getOptions(req));
 }; 
 // TCP 请求
 server.on('connect', handleSocket);

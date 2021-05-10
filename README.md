@@ -67,20 +67,31 @@ router.update([
 
 #### 转发正常请求
 ``` js
-const { headers } = req;
-// 设置规则，可以从数据库动态获取
-headers[NOHOST_RULE] = encodeURIComponent('ke.qq.com file://{test.html}');
-headers[NOHOST_VALUE] = encodeURIComponent(JSON.stringify({ 'test.html': 'hell world.' }));
+const getOptions = (req) => {
+  const { headers } = req;
+  const spaceName = 'imweb';
+  let gruopName;
+  let envName;
+  if (headers.host === 'km.oa2.com') {
+    gruopName = 'avenwu';
+    envName = '测试'; // 可选
+  } else if (req.headers.host !== 'km.oa.com') {
+    gruopName = 'avenwu2';
+    envName = '测试2'; // 可选
+  }
 
-// 设置环境
-headers[SPACE_NAME] = encodeURIComponent('imweb');
-headers[GROUP_NAME] = encodeURIComponent('avenwu');
-headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
+  return {
+    rules: 'file://{test.html} km.oa2.com www.test2.com',
+    values: { 'test.html': 'hell world.' },
+    spaceName,
+    gruopName,
+    envName,
+    callback: console.log, // 可选
+    // clientId: 'test', // 如果从外网转发过来的带登录态请求，设置下 clientId 方便插件当前用户的请求抓包
+  };
+};
 
-// 如果从外网转发过来的带登录态请求，设置下 clientId 方便插件当前用户的请求抓包
-// headers[CLIENT_ID] = uin;
-
-router.proxy(req, res);
+router.proxy(req, res, getOptions(req));
 
 // 或自己处理响应
 // const svrRes = await router.proxy(req);
@@ -88,15 +99,7 @@ router.proxy(req, res);
 ```
 #### 查看抓包数据
 ``` js
-// 设置环境
-headers[SPACE_NAME] = encodeURIComponent('imweb');
-headers[GROUP_NAME] = encodeURIComponent('avenwu');
-headers[ENV_NAME] = encodeURIComponent('测试'); // 可选
-
-// 只查看指定 clientId 的请求
-// headers[CLIENT_ID_FILTER] = uin;
-
-router.proxyUI(req, res);
+router.proxyUI(req, res, getOptions(req));
 ```
 
 ### 只转发到指定 Nohost 服务

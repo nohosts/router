@@ -18,14 +18,16 @@ const servers = [
 ];
 const ENV_MAP = {
   '1': {
-    space: 'imweb',
-    group: 'avenwu',
-    env: '测试'
+    spaceName: 'imweb',
+    groupName: 'avenwu',
+    envName: '测试'
   },
   '2': {
-    space: 'imweb',
-    group: 'avenwu2',
-    env: '测试2'
+    spaceName: 'imweb',
+    groupName: 'avenwu2',
+    envName: '测试2',
+    clientId: 'test',
+    // callback: console.log,
   }
 };
 
@@ -38,17 +40,9 @@ koaRouter.all('/network/:id/(.*)', async (ctx) => {
   if (!network) {
     return;
   }
-  const { space, group, env  } = network;
-  const { req, res, req: { headers } } = ctx;
+  const { req, res } = ctx;
   req.url = req.url.replace(`/network/${ctx.params.id}`, '');
-  headers[SPACE_NAME] = encodeURIComponent(space);
-  headers[GROUP_NAME] = encodeURIComponent(group);
-  if (env) {
-    headers[ENV_NAME] = encodeURIComponent(env);
-  }
-  // 过滤某个账号的抓包数据
-  // headers[CLIENT_ID_FILTER] = encodeURIComponent(uid);
-  const svrRes = await router.proxyUI(req, res, console.log);
+  const svrRes = await router.proxyUI(req, res, network);
   writeHead(res, svrRes);
   // ctx.status = svrRes.statusCode;
   // ctx.set(svrRes.headers);
