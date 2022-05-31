@@ -70,13 +70,13 @@ router.update([
 const getOptions = (req) => {
   const { headers } = req;
   const spaceName = 'imweb';
-  let gruopName;
+  let groupName;
   let envName;
   if (headers.host === 'km.oa2.com') {
-    gruopName = 'avenwu';
+    groupName = 'avenwu';
     envName = '测试'; // 可选
   } else if (req.headers.host !== 'km.oa.com') {
-    gruopName = 'avenwu2';
+    groupName = 'avenwu2';
     envName = '测试2'; // 可选
   }
 
@@ -84,7 +84,7 @@ const getOptions = (req) => {
     rules: 'file://{test.html} km.oa2.com www.test2.com',
     values: { 'test.html': 'hell world.' },
     spaceName,
-    gruopName,
+    groupName,
     envName,
     callback: console.log, // 可选
     // clientId: 'test', // 如果从外网转发过来的带登录态请求，设置下 clientId 方便插件当前用户的请求抓包
